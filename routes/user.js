@@ -10,5 +10,4 @@ router.get("/", (req, res) => {
   });
 });
 router.get("/myprofile", isAuthenticated,getMyprofile);
-
 export default router;

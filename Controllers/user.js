@@ -1,15 +1,16 @@
 import { User } from "../Models/userSchema.js";
 import bcrypt from "bcrypt";
-
 import { generateCookie } from "../utils/feature.js";
+import { isAuthenticated } from "../middlewares/auth.js";
+
 
 export const userRegister = async (req, res) => {
   const { name, email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
     return res.status(401).json({
-      massage: "User Already Exist",
       success: false,
+      massage: "User Already Exist",
     });
   } else {
     if (email && password && name) {
@@ -23,14 +24,14 @@ export const userRegister = async (req, res) => {
         return generateCookie(user, res, "successfully registered", 201);
       } else {
         return res.status(401).json({
-          massage: "User error",
           success: false,
+          massage: "User error",
         });
       }
     } else {
       return res.status(403).json({
-        massage: "please fill fields",
         success: false,
+        massage: "please fill fields",
       });
     }
   }
@@ -40,8 +41,8 @@ export const userLogin = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(400).json({
-      massage: "User not exist",
       success: false,
+      massage: "User not exist",
     });
   } else {
     const isMatch = await bcrypt.compare(password, user.password);
@@ -49,16 +50,51 @@ export const userLogin = async (req, res) => {
       return generateCookie(user, res, "successfully login", 200);
     } else {
       return res.status(400).json({
-        massage: "Credentials are invalid",
         success: false,
+        massage: "Invalid Credentials",
       });
     }
+  }
+};
+export const userLogout = async (req, res) => {
+  if (isAuthenticated) {
+    res
+      .status(200)
+      .cookie("token", "", {
+        expires: new Date(Date.now()),
+      })
+      .json({
+        success: true,
+        message: "logout successfully ",
+      });
+  } else {
+    res.status(404).json({
+      success: "false",
+      message: "login before logout",
+    });
   }
 };
 
 export const getMyprofile = async (req, res) => {
   res.status(200).json({
-    message: "hey!",
+    message: "userProfile",
     user: req.user,
   });
+};
+
+export const getUserById = async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(401).json({
+      success: false,
+      massage: "User id is not valid",
+    });
+  } else {
+    res.status(200).json({
+      success: true,
+      message: "get user",
+      user,
+    });
+  }
 };

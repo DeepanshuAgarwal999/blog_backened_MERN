@@ -27,7 +27,6 @@ app.use("/users/blogs", blogRouter);
 config({
   path: "./constant/config.env",
 });
-
 app.listen(process.env.PORT, () => {
   console.log(`Server has been started on port -> ${process.env.PORT}`);
 });

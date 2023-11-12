@@ -65,17 +65,47 @@ export const updateBlog = async (req, res) => {
 export const deleteBlog = async (req, res) => {
   const id = req.params.id;
   const blog = await Blog.findById(id);
-  if(!blog){
+  if (!blog) {
     res.status(404).json({
-      success:false,
-      message:"unable to Delete"
-    })
+      success: false,
+      message: "unable to Delete",
+    });
+  } else {
+    await blog.deleteOne();
+    res.json({
+      success: true,
+      message: "Blog succesfully deleted",
+    });
   }
- else{
-  await blog.deleteOne();
-  res.json({
-    success:true,
-    message:"Blog succesfully deleted"
-  })
- }
+};
+export const getAllBlogs = async (req, res) => {
+  const blogs = await Blog.find();
+  if (!blogs) {
+    return res.status(404).json({
+      success: false,
+      message: "There is no blogs",
+    });
+  } else {
+    return res.status(200).json({
+      success: true,
+      message: "All blogs",
+      blogs,
+    });
+  }
+};
+export const getBlogByID = async (req, res) => {
+  const id = req.params.id;
+  const blog = await Blog.findById(id);
+  if (!blog) {
+    return res.status(404).json({
+      success: false,
+      message: "invalid id ",
+    });
+  } else {
+    return res.status(200).json({
+      success: true,
+      message: "your blog",
+      blog,
+    });
+  }
 };
