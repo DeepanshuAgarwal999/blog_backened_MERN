@@ -8,7 +8,7 @@ export const generateCookie = (user, res, message, statuscode) => {
       .cookie("token", token, {
         httpOnly: true,
         maxAge: 2 * 60 * 60 * 1000, // 2hr
-        sameSite: process.env.NODE_ENV === "Development" ? "lax" : none,
+        sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
         security: process.env.NODE_ENV === "Development" ? false : true,
       })
       .json({
