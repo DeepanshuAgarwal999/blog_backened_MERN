@@ -10,6 +10,6 @@ export const isAuthenticated = async (req, res, next) => {
     });
   }
   const decode = jwt.verify(token, process.env.JWT_SECRET);
-  req.user = await User.findById(decode.id);
+  req.user = await User.findById(decode._id);
   if (req.user) next();
 };
