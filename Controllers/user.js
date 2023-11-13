@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import { generateCookie } from "../utils/feature.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 
-
 export const userRegister = async (req, res) => {
   const { name, email, password } = req.body;
   const user = await User.findOne({ email });
@@ -21,7 +20,7 @@ export const userRegister = async (req, res) => {
         password: hashPassword,
       });
       if (user) {
-        return generateCookie(user, res, "successfully registered", 201);
+         generateCookie(user, res, "successfully registered", 201);
       } else {
         return res.status(401).json({
           success: false,
@@ -47,7 +46,7 @@ export const userLogin = async (req, res) => {
   } else {
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      return generateCookie(user, res, "successfully login", 200);
+     generateCookie(user, res, "successfully login", 200);
     } else {
       return res.status(400).json({
         success: false,
