@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const generateCookie = (user, res, message, statuscode) => {
   if (statuscode === 201 || statuscode === 200) {
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
     res
       .status(statuscode)
       .cookie("token", token, {
