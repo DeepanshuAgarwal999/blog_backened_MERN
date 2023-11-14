@@ -8,7 +8,7 @@ import { config } from "dotenv";
 import cors from "cors";
 const app = express();
 DBconn();
-app.use(cookieParser());
+app.use(cookieParser(""));
 app.use(express.json());
 app.use(
   cors({
