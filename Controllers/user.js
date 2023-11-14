@@ -46,24 +46,7 @@ let user = await User.findOne({ email });
   } else {
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-     // generateCookie(user, res, "successfully login", 200);
-       const token = jwt.sign(
-        { id: user._id, email: user.email },
-        process.env.JWT_SECRET
-      );
-      user = user.toObject();
-      user.password = null;
-      user.token = token;
-      res.status(200).cookie("token", token, {
-          httpOnly: true,
-          maxAge: 2 * 60 * 60 * 1000, // 2hr
-          sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
-          security: process.env.NODE_ENV === "Development" ? false : true,
-        }).json({
-          success: true,
-          message: `success login`,
-          user,
-        });
+     generateCookie(user, res, "successfully login", 200);
     } else {
       return res.status(400).json({
         success: false,
@@ -73,22 +56,13 @@ let user = await User.findOne({ email });
   }
 };
 export const userLogout = async (req, res) => {
-  if (isAuthenticated) {
-    res
-      .status(200)
-      .cookie("token", "", {
+    res.status(200).cookie("token", "", {
         expires: new Date(Date.now()),
       })
       .json({
         success: true,
         message: "logout successfully ",
       });
-  } else {
-    res.status(404).json({
-      success: "false",
-      message: "login before logout",
-    });
-  }
 };
 
 export const getMyprofile = async (req, res) => {
