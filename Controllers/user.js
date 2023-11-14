@@ -46,7 +46,24 @@ export const userLogin = async (req, res) => {
   } else {
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-     generateCookie(user, res, "successfully login", 200);
+     // generateCookie(user, res, "successfully login", 200);
+       const token = jwt.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET
+      );
+      user = user.toObject();
+      user.password = null;
+      user.token = token;
+      res.status(200).cookie("token", token, {
+          httpOnly: true,
+          maxAge: 2 * 60 * 60 * 1000, // 2hr
+          sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
+          security: process.env.NODE_ENV === "Development" ? false : true,
+        }).json({
+          success: true,
+          message: `success login`,
+          user,
+        });
     } else {
       return res.status(400).json({
         success: false,
