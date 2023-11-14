@@ -46,7 +46,7 @@ let user = await User.findOne({ email });
   } else {
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-     generateCookie(user, res, "successfully login", 200);
+     // generateCookie(user, res, "successfully login", 200);
        const token = jwt.sign(
         { id: user._id, email: user.email },
         process.env.JWT_SECRET
