@@ -12,6 +12,7 @@ export const generateCookie = (user, res, message, statuscode) => {
       .json({
         success: true,
         massage: `${message + " " + user.name}`,
+        user
       });
   }
 };
